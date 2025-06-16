@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login do Prestador</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div style="
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff3f3;
+    color: #b91c1c;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border: 1px solid #fca5a5;
+    border-radius: 6px;
+    z-index: 9999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  ">
+    ⚠️ Este é um site de testes. Nenhum dado inserido é armazenado.
+  </div>
+
+  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+    <div class="flex justify-center mb-6">
+      <img src="logo.png" alt="Logo" class="h-16">
+    </div>
+
+    <h2 class="text-2xl font-bold text-center text-orange-600 mb-4">Login do Prestador</h2>
+
+    <form id="formPrestador" class="space-y-4">
+      <input
+        type="email"
+        id="email"
+        placeholder="E-mail"
+        class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+        required
+      />
+
+      <input
+        type="password"
+        id="senha"
+        placeholder="Senha"
+        class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+        required
+      />
+
+      <button
+        type="submit"
+        class="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 rounded"
+      >
+        Entrar
+      </button>
+    </form>
+
+    <p class="text-center text-sm text-gray-500 mt-4">
+      E-mail de teste: <strong>prestador@teste.com</strong><br/>
+      Senha: <strong>1234</strong>
+    </p>
+  </div>
+
+  <script>
+    document.getElementById('formPrestador').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+
+      // Simples validação para teste
+      if (email === 'prestador@teste.com' && senha === '1234') {
+        window.location.href = 'painel-prestador.html';
+      } else {
+        alert('Credenciais inválidas. Tente novamente.');
+      }
+    });
+  </script>
+</body>
+</html>

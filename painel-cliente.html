@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Cliente - Convento Reformas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+  <header class="bg-blue-900 text-white p-4 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <img src="logo.png" alt="Logo Convento Reformas" class="h-10">
+      <h1 class="text-xl font-bold">Painel do Cliente</h1>
+    </div>
+  </header>
+
+  <main class="p-6 max-w-5xl mx-auto">
+    <!-- Criar ordem -->
+    <section class="mb-10">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">📝 Criar Ordem de Serviço</h2>
+      <form id="formOrdem" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-lg shadow border">
+        <input type="text" id="nome" placeholder="Nome do Cliente" class="p-2 border rounded w-full" required />
+        <select id="servico" class="p-2 border rounded w-full">
+          <option value="">Serviço</option>
+          <option>Hidráulica</option>
+          <option>Elétrica</option>
+          <option>Pintura</option>
+          <option>Reparos</option>
+        </select>
+        <input type="text" id="endereco" placeholder="Endereço" class="p-2 border rounded w-full" required />
+        <input type="tel" id="telefone" placeholder="Telefone" class="p-2 border rounded w-full" required />
+        <input type="date" id="data" class="p-2 border rounded w-full" required />
+        <select id="pagamento" class="p-2 border rounded w-full">
+          <option value="">Forma de Pagamento</option>
+          <option>PIX</option>
+          <option>Dinheiro</option>
+          <option>Cartão</option>
+        </select>
+        <textarea id="observacoes" placeholder="Observações" class="p-2 border rounded md:col-span-2 w-full"></textarea>
+        <button type="submit" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded md:col-span-2 shadow">Enviar Ordem</button>
+      </form>
+    </section>
+
+    <!-- Lista de ordens -->
+    <section>
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">📦 Suas Ordens de Serviço</h2>
+      <div id="listaOrdens" class="space-y-6"></div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById('formOrdem');
+    const lista = document.getElementById('listaOrdens');
+
+    function renderizarOrdens() {
+      const ordens = JSON.parse(localStorage.getItem('ordens') || '[]');
+      lista.innerHTML = '';
+
+      ordens.forEach((ordem, index) => {
+        const div = document.createElement('div');
+        div.className = 'bg-white p-6 rounded-lg shadow border';
+
+        let icon = '';
+        if (ordem.status.startsWith('Pendente')) icon = '<i data-lucide="clock" class="w-4 h-4 text-yellow-500 inline mr-1"></i>';
+        else if (ordem.status.startsWith('Recusada')) icon = '<i data-lucide="x-circle" class="w-4 h-4 text-red-500 inline mr-1"></i>';
+        else if (ordem.status.startsWith('Proposta enviada')) icon = '<i data-lucide="send" class="w-4 h-4 text-blue-500 inline mr-1"></i>';
+        else if (ordem.status.startsWith('Proposta aceita')) icon = '<i data-lucide="check-circle" class="w-4 h-4 text-green-600 inline mr-1"></i>';
+        else if (ordem.status === 'Concluído') icon = '<i data-lucide="check" class="w-4 h-4 text-purple-600 inline mr-1"></i>';
+        else icon = '<i data-lucide="alert-circle" class="w-4 h-4 text-gray-400 inline mr-1"></i>';
+
+        let conteudo = `
+          <div class="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
+            <p><strong>Cliente:</strong> ${ordem.nome}</p>
+            <p><strong>Serviço:</strong> ${ordem.servico}</p>
+            <p><strong>Endereço:</strong> ${ordem.endereco}</p>
+            <p><strong>Telefone:</strong> ${ordem.telefone}</p>
+            <p><strong>Data:</strong> ${ordem.data}</p>
+            <p><strong>Pagamento:</strong> ${ordem.pagamento}</p>
+            <p class="md:col-span-2"><strong>Observações:</strong> ${ordem.observacoes}</p>
+            <p class="md:col-span-2"><strong>Status:</strong> ${icon}${ordem.status}</p>
+          </div>
+        `;
+
+        if (ordem.status.startsWith('Proposta enviada')) {
+          conteudo += `
+            <div class="mt-4 flex gap-2">
+              <button class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded shadow" onclick="aceitarProposta(${index})">Aceitar</button>
+              <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded shadow" onclick="recusarProposta(${index})">Recusar</button>
+            </div>
+          `;
+        }
+
+        conteudo += `
+          <div class="mt-4 text-sm">
+            <h3 class="font-semibold mb-1">Mensagens:</h3>
+            <div class="bg-gray-100 p-3 rounded border space-y-1">
+              ${(ordem.mensagens || []).map(m => `<p><strong>${m.autor}:</strong> ${m.texto}</p>`).join('') || '<em>Sem mensagens.</em>'}
+            </div>
+            <input type="text" placeholder="Escreva uma mensagem" class="p-2 border rounded w-full mt-2" onkeydown="if(event.key==='Enter') enviarMensagem(${index}, this)">
+          </div>
+        `;
+
+        if (ordem.status === 'Proposta aceita pelo cliente') {
+          conteudo += `
+            <div class="mt-4">
+              <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded shadow" onclick="concluirServico(${index})">Marcar como concluído</button>
+            </div>
+          `;
+        }
+
+        if (ordem.status === 'Concluído') {
+          conteudo += `
+            <div class="mt-4">
+              <label class="block text-sm font-medium mb-1">Avaliação:</label>
+              <select class="p-2 border rounded w-full max-w-xs" onchange="avaliar(${index}, this.value)">
+                <option value="">Escolha</option>
+                <option value="1">⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="5">⭐⭐⭐⭐⭐</option>
+              </select>
+            </div>
+          `;
+        }
+
+        div.innerHTML = conteudo;
+        lista.appendChild(div);
+      });
+
+      lucide.createIcons();
+    }
+
+    function aceitarProposta(index) {
+      const ordens = JSON.parse(localStorage.getItem('ordens') || '[]');
+      ordens[index].status = 'Proposta aceita pelo cliente';
+      localStorage.setItem('ordens', JSON.stringify(ordens));
+      renderizarOrdens();
+    }
+
+    function recusarProposta(index) {
+      const ordens = JSON.parse(localStorage.getItem('ordens') || '[]');
+      ordens[index].status = 'Proposta recusada pelo cliente';
+      localStorage.setItem('ordens', JSON.stringify(ordens));
+      renderizarOrdens();
+    }
+
+    function enviarMensagem(index, input) {
+      const texto = input.value.trim();
+      if (!texto) return;
+      const ordens = JSON.parse(localStorage.getItem('ordens') || '[]');
+      if (!ordens[index].mensagens) ordens[index].mensagens = [];
+      ordens[index].mensagens.push({ autor: 'cliente', texto });
+      localStorage.setItem('ordens', JSON.stringify(ordens));
+      input.value = '';
+      renderizarOrdens();
+    }
+
+    function concluirServico(index) {
+      const ordens = JSON.parse(localStorage.getItem('ordens') || '[]');
+      ordens[index].status = 'Concluído';
+      localStorage.setItem('ordens', JSON.stringify(ordens));
+      renderizarOrdens();
+    }
+
+    function avaliar(index, nota) {
+      const ordens = JSON.parse(localStorage.getItem('ordens') || '[]');
+      ordens[index].avaliacao = nota;
+      localStorage.setItem('ordens', JSON.stringify(ordens));
+      alert(`Você avaliou com ${nota} estrela(s).`);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const novaOrdem = {
+        nome: document.getElementById('nome').value,
+        servico: document.getElementById('servico').value,
+        endereco: document.getElementById('endereco').value,
+        telefone: document.getElementById('telefone').value,
+        data: document.getElementById('data').value,
+        pagamento: document.getElementById('pagamento').value,
+        observacoes: document.getElementById('observacoes').value,
+        status: 'Pendente',
+        mensagens: [],
+        avaliacao: ''
+      };
+
+      const ordens = JSON.parse(localStorage.getItem('ordens') || '[]');
+      ordens.push(novaOrdem);
+      localStorage.setItem('ordens', JSON.stringify(ordens));
+      form.reset();
+      renderizarOrdens();
+    });
+
+    window.onload = renderizarOrdens;
+  </script>
+</body>
+
+</html>

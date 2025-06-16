@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+
+      window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop - 80;
+          if (pageYOffset >= sectionTop) {
+            current = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('text-orange-600', 'font-bold');
+          if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('text-orange-600', 'font-bold');
+          }
+        });
+      });
+    });
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convento Reformas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+  html {
+    scroll-behavior: smooth;
+  }
+    .btn {
+      @apply px-6 py-2 rounded-full font-semibold shadow-md transition hover:scale-105 hover:brightness-90;
+    }
+    .fade-in {
+      animation: fadeIn 1s ease-in-out both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <div style="
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff3f3;
+    color: #b91c1c;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border: 1px solid #fca5a5;
+    border-radius: 6px;
+    z-index: 9999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  ">
+    ⚠️ Este é um site de testes. Nenhum dado inserido é armazenado.
+  </div>
+
+  <!-- Menu de Navegação -->
+  <header class="bg-white shadow sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <img src="logo.png" alt="Logo" class="w-10 h-10">
+        <span class="text-xl font-bold text-blue-900">Convento Reformas</span>
+      </div>
+      <nav class="space-x-4 hidden sm:flex items-center">
+        <a href="#inicio" class="text-blue-900 hover:text-orange-600 font-medium">Início</a>
+        <a href="#sobre" class="text-blue-900 hover:text-orange-600 font-medium">Sobre</a>
+        <a href="#contato" class="text-blue-900 hover:text-orange-600 font-medium">Contato</a>
+        <a href="cliente.html" class="btn bg-orange-600 text-white">Área do Cliente</a>
+        <a href="prestador.html" class="btn bg-blue-900 text-white">Área do Prestador</a>
+      </nav>
+    </div>
+  </header>
+  <!-- Página Inicial -->
+    <section class="relative w-full h-[480px] flex items-center justify-center bg-cover bg-center" style="background-image: url('banner.jpg');">
+  <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+  <div class="relative z-10 text-center text-white">
+    <h1 class="text-4xl sm:text-5xl font-extrabold mb-4">REFORMAS DE QUALIDADE</h1>
+    <p class="text-lg mb-6">Transformamos sua casa ou apartamento com excelência.</p>
+    <div class="flex justify-center gap-4">
+      <a href="cliente.html" class="btn bg-orange-600 text-white flex items-center gap-2">
+        <i class="ph ph-user-circle text-xl"></i>
+        Cliente
+      </a>
+      <a href="prestador.html" class="btn bg-blue-900 text-white flex items-center gap-2">
+        <i class="ph ph-briefcase text-xl"></i>
+        Prestador
+      </a>
+    </div>
+  </div>
+</section>
+    </div>
+
+    
+
+      <section id="nossa-funcao" class="bg-white py-16 px-6 fade-in">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 items-center gap-10">
+    <img src="Função.png" alt="Profissional em reforma" class="rounded-lg shadow-md w-full h-auto">
+    <div class="text-left">
+      <h2 class="text-3xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+        <i class="ph ph-wrench text-orange-600"></i>
+        Nossa Função
+      </h2>
+      <p class="text-lg text-gray-700">Oferecemos um ambiente simples e confiável para clientes localizarem, agendarem e contratarem profissionais para elétrica, hidráulica, pintura e mais.</p>
+    </div>
+  </div>
+</section>
+      <section id="quem-somos" class="bg-gray-100 py-16 px-6 fade-in">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 items-center gap-10">
+    <div class="text-left">
+      <h2 class="text-3xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+        <i class="ph ph-users-four text-blue-800"></i>
+        Quem Somos
+      </h2>
+      <p class="text-lg text-gray-700">Plataforma digital criada para solucionar a dificuldade de encontrar profissionais qualificados, confiáveis e disponíveis para realizar pequenos reparos residenciais.</p>
+    </div>
+    <img src="Quem Somos.png" alt="Equipe trabalhando" class="rounded-lg shadow-md w-full h-auto">
+  </div>
+</section>
+
+<section id="area-de-cobertura" class="bg-gray-100 py-16 px-6 fade-in">
+  <div class="max-w-6xl mx-auto text-center">
+    <h2 class="text-3xl font-bold text-blue-900 mb-6">Áreas de Cobertura</h2>
+    <p class="text-lg text-gray-700 mb-10">Atendemos diversas regiões da Grande Vitória, sempre com qualidade e agilidade no atendimento.</p>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center justify-center">
+      <div class="flex flex-col items-center">
+        <div class="w-16 h-24 bg-cyan-900 rounded-b-full relative">
+          <i class="ph ph-map-pin text-white text-3xl absolute top-5 left-1/2 -translate-x-1/2"></i>
+        </div>
+        <span class="mt-2 text-cyan-900 font-semibold">Vitória</span>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="w-16 h-24 bg-cyan-800 rounded-b-full relative">
+          <i class="ph ph-map-pin text-white text-3xl absolute top-5 left-1/2 -translate-x-1/2"></i>
+        </div>
+        <span class="mt-2 text-cyan-800 font-semibold">Vila Velha</span>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="w-16 h-24 bg-cyan-600 rounded-b-full relative">
+          <i class="ph ph-map-pin text-white text-3xl absolute top-5 left-1/2 -translate-x-1/2"></i>
+        </div>
+        <span class="mt-2 text-cyan-600 font-semibold">Cariacica</span>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="w-16 h-24 bg-cyan-400 rounded-b-full relative">
+          <i class="ph ph-map-pin text-white text-3xl absolute top-5 left-1/2 -translate-x-1/2"></i>
+        </div>
+        <span class="mt-2 text-cyan-400 font-semibold">Serra</span>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+      <section id="areas-de-atuacao" class="bg-white py-16 px-6 fade-in">
+  <div class="max-w-6xl mx-auto text-center">
+  <h2 class="text-3xl font-bold text-blue-900 mb-6">Áreas de Atuação</h2>
+  <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-10">Convento Reformas oferece uma variedade de serviços para pequenos reparos em residências. Desde pintura até reparos elétricos e hidráulicos, nossa equipe está pronta para atender às necessidades dos clientes com eficiência e qualidade.</p>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full">
+    <div class="bg-blue-900 text-white rounded-lg p-6 flex flex-col items-center">
+      <i class="ph ph-paint-roller text-4xl mb-4"></i>
+      <h3 class="text-xl font-bold mb-2">Pintura</h3>
+      <p class="text-sm text-center">Nossos profissionais são especializados em pintura para renovar e embelezar ambientes com técnicas modernas e materiais de alta qualidade.</p>
+    </div>
+    <div class="bg-blue-800 text-white rounded-lg p-6 flex flex-col items-center">
+      <i class="ph ph-plug text-4xl mb-4"></i>
+      <h3 class="text-xl font-bold mb-2">Elétrica</h3>
+      <p class="text-sm text-center">Equipe capacitada para lidar com instalações, reparos e manutenções elétricas garantindo segurança e funcionalidade.</p>
+    </div>
+    <div class="bg-sky-600 text-white rounded-lg p-6 flex flex-col items-center">
+      <i class="ph ph-drop-half text-4xl mb-4"></i>
+      <h3 class="text-xl font-bold mb-2">Hidráulica</h3>
+      <p class="text-sm text-center">Serviços de encanamento, vazamentos e soluções relacionadas à água com equipe experiente e técnica.</p>
+    </div>
+    <div class="bg-sky-400 text-white rounded-lg p-6 flex flex-col items-center">
+      <i class="ph ph-wrench text-4xl mb-4"></i>
+      <h3 class="text-xl font-bold mb-2">Reparos</h3>
+      <p class="text-sm text-center">Realizamos reparos gerais em residências com agilidade e compromisso. De fechaduras a portas e mais.</p>
+    </div>
+    </div>
+</section>
+<section id="diferenciais" class="bg-gray-100 py-16 px-6 fade-in">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
+    <div class="flex flex-col justify-center">
+      <h2 class="text-3xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+        <i class="ph ph-star text-blue-800"></i>
+        Nossos Diferenciais
+      </h2>
+      <p class="text-lg text-gray-700 mb-6">Trabalhamos com foco na confiança, rapidez e qualidade, garantindo segurança e tranquilidade para quem contrata e para quem executa.</p>
+      <ul class="space-y-3 text-gray-700">
+        <li class="flex items-start gap-2"><i class="ph ph-check-circle text-blue-800 text-xl"></i> Agendamento fácil e rápido</li>
+        <li class="flex items-start gap-2"><i class="ph ph-shield-check text-blue-800 text-xl"></i> Pagamento seguro pela plataforma</li>
+        <li class="flex items-start gap-2"><i class="ph ph-star text-blue-800 text-xl"></i> Profissionais avaliados por clientes</li>
+        <li class="flex items-start gap-2"><i class="ph ph-thumbs-up text-blue-800 text-xl"></i> Garantia de serviço prestado</li>
+      </ul>
+    </div>
+    <div class="bg-white p-8 rounded-lg shadow-md">
+      <h3 class="text-2xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+        <i class="ph ph-phone-call"></i>
+        Fale Conosco
+      </h3>
+      <p class="text-gray-700 mb-4">Envie sua mensagem para dúvidas ou orçamentos:</p>
+      <form class="space-y-4">
+        <input type="text" placeholder="Seu nome" class="w-full p-3 border border-gray-300 rounded">
+        <input type="email" placeholder="Seu e-mail" class="w-full p-3 border border-gray-300 rounded">
+        <input type="tel" placeholder="Seu telefone" class="w-full p-3 border border-gray-300 rounded">
+        <textarea placeholder="Mensagem" rows="4" class="w-full p-3 border border-gray-300 rounded"></textarea>
+        <button type="submit" class="btn bg-blue-900 text-white w-full">Enviar</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+  <!-- Rodapé -->
+  <footer class="bg-blue-900 text-white text-center py-6 mt-16">
+    <p class="text-sm">&copy; 2025 Convento Reformas. Todos os direitos reservados.</p>
+    <p class="text-xs">Desenvolvido por Arthur Seibel</p>
+  </footer>
+</body>
+</html>

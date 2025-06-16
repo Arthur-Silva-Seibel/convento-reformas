@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel do Prestador - Convento Reformas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+  <!-- Header -->
+  <header class="bg-blue-900 text-white p-4 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <img src="logo.png" alt="Logo Convento Reformas" class="h-10">
+      <h1 class="text-xl font-bold">Painel do Prestador</h1>
+    </div>
+    <nav class="flex space-x-4">
+      <button onclick="mostrarAba('solicitacoes')" class="tab-btn text-white font-semibold underline">Solicitações</button>
+      <button onclick="mostrarAba('dashboard')" class="tab-btn text-white font-semibold">Dashboard</button>
+    </nav>
+  </header>
+
+  <!-- Conteúdo -->
+  <main class="p-6 max-w-5xl mx-auto">
+    <!-- Aba: Solicitações -->
+    <section id="solicitacoes" class="space-y-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">📥 Solicitações Recebidas</h2>
+      <div id="listaSolicitacoes" class="space-y-6"></div>
+    </section>
+
+    <!-- Aba: Dashboard -->
+    <section id="dashboard" class="hidden">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">📊 Dashboard</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow border">
+          <h3 class="text-lg font-semibold text-blue-900 mb-2">Total de Propostas Enviadas</h3>
+          <p id="propostasEnviadas" class="text-3xl text-blue-700 font-bold">0</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow border">
+          <h3 class="text-lg font-semibold text-blue-900 mb-2">Ordens Aceitas</h3>
+          <p id="ordensAceitas" class="text-3xl text-green-700 font-bold">0</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Script -->
+  <script>
+    const perfilPrestador = {
+      nome: "João Silva",
+      email: "joao@convento.com",
+      telefone: "(27) 99999-9999",
+      experiencia: "5 anos de reformas residenciais e comerciais",
+      especialidade: "Elétrica e pintura"
+    };
+
+    const lista = document.getElementById('listaSolicitacoes');
+
+    function carregarSolicitacoes() {
+      const ordens = JSON.parse(localStorage.getItem('ordens') || '[]');
+      lista.innerHTML = '';
+
+      let propostas = 0;
+      let aceitas = 0;
+
+      ordens.forEach((ordem, index) => {
+        if (ordem.status.startsWith('Proposta enviada')) propostas++;
+        if (ordem.status.startsWith('Proposta aceita')) aceitas++;
+
+        const div = document.createElement('div');
+        div.className = 'bg-white p-6 rounded-xl shadow border';
+
+        let icon = '';
+        if (ordem.status.startsWith('Pendente')) icon = '<i data-lucide="clock" class="w-4 h-4 text-yellow-500 inline mr-1"></i>';
+        else if (ordem.status.startsWith('Recusada')) icon = '<i data-lucide="x-circle" class="w-4 h-4 text-red-500 inline mr-1"></i>';
+        else if (ordem.status.startsWith('Proposta enviada')) icon = '<i data-lucide="send" class="w-4 h-4 text-blue-500 inline mr-1"></i>';
+        else if (ordem.status.startsWith('Proposta aceita')) icon = '<i data-lucide="check-circle" class="w-4 h-4 text-green-500 inline mr-1"></i>';
+        else icon = '<i data-lucide="alert-circle" class="w-4 h-4 text-gray-500 inline mr-1"></i>';
+
+        let conteudo = `
+          <div class="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
+            <p><span class="font-medium">Cliente:</span> ${ordem.nome}</p>
+            <p><span class="font-medium">Serviço:</span> ${ordem.servico}</p>
+            <p><span class="font-medium">Endereço:</span> ${ordem.endereco}</p>
+            <p><span class="font-medium">Telefone:</span> ${ordem.telefone}</p>
+            <p><span class="font-medium">Data:</span> ${ordem.data}</p>
+            <p><span class="font-medium">Pagamento:</span> ${ordem.pagamento}</p>
+            <p class="md:col-span-2"><span class="font-medium">Observações:</span> ${ordem.observacoes}</p>
+            <p class="md:col-span-2"><span class="font-medium">Status:</span> ${icon} ${ordem.status}</p>
+          </div>
+        `;
+
+        if (ordem.status === 'Pendente') {
+          conteudo += `
+            <div class="mt-4 flex gap-3">
+              <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow" onclick="recusarOrdem(${index})">Recusar</button>
+              <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow" onclick="mostrarProposta(${index})">Enviar Proposta</button>
+            </div>
+            <div id="formProposta${index}" class="hidden mt-4 space-y-2 bg-gray-50 p-4 rounded-lg border">
+              <input type="number" id="valor${index}" placeholder="Valor da proposta (R$)" class="border p-2 rounded w-full" />
+              <textarea id="obs${index}" placeholder="Observações da proposta" class="border p-2 rounded w-full"></textarea>
+              <button class="bg-blue-600 text-white px-4 py-2 rounded shadow" onclick="enviarProposta(${index})">Confirmar Proposta</button>
+            </div>
+          `;
+        }
+
+        conteudo += `
+          <div class="mt-4 text-sm">
+            <h3 class="font-semibold mb-1">Mensagens:</h3>
+            <div class="bg-gray-100 p-3 rounded mb-2 border space-y-1 text-gray-700">
+              ${(ordem.mensagens || []).map(m => `<p><strong>${m.autor}:</strong> ${m.texto}</p>`).join('') || '<em>Sem mensagens.</em>'}
+            </div>
+            <input type="text" placeholder="Responder mensagem" class="p-2 border rounded w-full" onkeydown="if(event.key==='Enter') responderMensagem(${index}, this)">
+          </div>
+        `;
+
+        if (ordem.avaliacao) {
+          conteudo += `<p class="mt-2 text-sm text-gray-500">Avaliação do cliente: <span class="text-yellow-500">${'⭐'.repeat(ordem.avaliacao)}</span></p>`;
+        }
+
+        div.innerHTML = conteudo;
+        lista.appendChild(div);
+      });
+
+      document.getElementById("propostasEnviadas").innerText = propostas;
+      document.getElementById("ordensAceitas").innerText = aceitas;
+      lucide.createIcons();
+    }
+
+    function mostrarProposta(index) {
+      document.getElementById(`formProposta${index}`).classList.remove('hidden');
+    }
+
+    function recusarOrdem(index) {
+      const ordens = JSON.parse(localStorage.getItem('ordens') || '[]');
+      ordens[index].status = 'Recusada pelo prestador';
+      localStorage.setItem('ordens', JSON.stringify(ordens));
+      carregarSolicitacoes();
+    }
+
+    function enviarProposta(index) {
+      const valor = document.getElementById(`valor${index}`).value;
+      const obs = document.getElementById(`obs${index}`).value;
+      if (!valor) return alert('Insira um valor para a proposta.');
+      const ordens = JSON.parse(localStorage.getItem('ordens') || '[]');
+      ordens[index].status = `Proposta enviada: R$ ${valor} - ${obs}`;
+      ordens[index].prestador = perfilPrestador;
+      localStorage.setItem('ordens', JSON.stringify(ordens));
+      carregarSolicitacoes();
+    }
+
+    function responderMensagem(index, input) {
+      const texto = input.value.trim();
+      if (!texto) return;
+      const ordens = JSON.parse(localStorage.getItem('ordens') || '[]');
+      if (!ordens[index].mensagens) ordens[index].mensagens = [];
+      ordens[index].mensagens.push({ autor: 'prestador', texto });
+      localStorage.setItem('ordens', JSON.stringify(ordens));
+      input.value = '';
+      carregarSolicitacoes();
+    }
+
+    function mostrarAba(aba) {
+      document.getElementById('solicitacoes').classList.add('hidden');
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById(aba).classList.remove('hidden');
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('underline'));
+      event.target.classList.add('underline');
+    }
+
+    window.onload = carregarSolicitacoes;
+  </script>
+</body>
+
+</html>
