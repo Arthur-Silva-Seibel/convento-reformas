@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel do Cliente - Convento Reformas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+    <div style="
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff3f3;
+    color: #b91c1c;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border: 1px solid #fca5a5;
+    border-radius: 6px;
+    z-index: 9999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  ">
+    ⚠️ Este é um site de testes. Nenhum dado inserido é armazenado.
+  </div>
+
+
+  <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+    <div class="flex justify-center mb-6">
+      <img src="logo.png" alt="Logo Convento Reformas" class="h-16">
+    </div>
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Painel do Cliente</h1>
+
+    <form id="formCliente" class="space-y-4">
+      <div>
+        <label class="block text-gray-700 mb-1">E-mail</label>
+        <div class="flex items-center border rounded px-3 py-2 bg-gray-50">
+          <span class="material-symbols-outlined mr-2 text-gray-500">mail</span>
+          <input id="clienteEmail" type="email" placeholder="seuemail@exemplo.com" class="bg-transparent w-full outline-none" required />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-gray-700 mb-1">Senha</label>
+        <div class="flex items-center border rounded px-3 py-2 bg-gray-50">
+          <span class="material-symbols-outlined mr-2 text-gray-500">lock</span>
+          <input id="clienteSenha" type="password" placeholder="••••••••" class="bg-transparent w-full outline-none" required />
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between text-sm text-gray-600">
+        <label class="flex items-center">
+          <input type="checkbox" class="mr-2" />
+          Lembrar-me
+        </label>
+        <a href="#" class="text-blue-700 hover:underline">Esqueceu sua senha?</a>
+      </div>
+
+      <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-2 rounded font-semibold">
+        Entrar
+      </button>
+    </form>
+  </div>
+
+  <!-- Ícones do Material Symbols (Google) -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <script>
+    document.getElementById('formCliente').addEventListener('submit', e => {
+      e.preventDefault();
+      const email = document.getElementById('clienteEmail').value.trim();
+      const senha = document.getElementById('clienteSenha').value.trim();
+
+      // Login de teste
+      if (email === "cliente@teste.com" && senha === "1234") {
+        // Redireciona para a página interna
+        window.location.href = "painel-cliente.html";
+      } else {
+        alert("Login inválido. Use:\nEmail: cliente@teste.com\nSenha: 1234");
+      }
+    });
+  </script>
+</body>
+</html>
